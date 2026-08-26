@@ -1,0 +1,483 @@
+/* ============== BUTTONS ============== */
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 34px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 0 12px;
+  font-size: 13px; font-weight: 500;
+  transition: background .12s ease, border-color .12s ease;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--surface-2); border-color: var(--line-strong); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn.primary {
+  background: var(--text); color: #fff; border-color: var(--text);
+}
+.btn.primary:hover { background: #000; border-color: #000; }
+.btn.ink {
+  background: var(--ink); color: #fff; border-color: var(--ink);
+}
+.btn.ink:hover { background: var(--ink-hover); border-color: var(--ink-hover); }
+.btn.share {
+  background: var(--sage-soft); color: var(--sage); border-color: var(--sage-line);
+}
+.btn.share:hover { background: #dfeae2; }
+.btn.danger {
+  color: var(--ruby); border-color: var(--ruby-line); background: var(--ruby-soft);
+}
+.btn.danger.solid {
+  background: var(--ruby);
+  border-color: var(--ruby);
+  color: #fff;
+}
+.btn.danger.solid:hover {
+  background: #7f1717;
+  border-color: #7f1717;
+}
+.btn.ghost { background: transparent; border-color: transparent; color: var(--text-2); }
+.btn.ghost:hover { background: var(--surface-2); color: var(--text); }
+.btn.sm { height: 32px; padding: 0 10px; font-size: 12px; border-radius: var(--radius-sm); }
+.btn.icon-only { padding: 0; width: 34px; justify-content: center; }
+.btn.icon-only.sm { width: 32px; }
+
+.upload-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.upload-action input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.upload-action .btn {
+  cursor: pointer;
+}
+.upload-action .btn.busy {
+  opacity: .7;
+  cursor: wait;
+}
+.upload-action-error {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  width: max-content;
+  max-width: 320px;
+  padding: 6px 8px;
+  border: 1px solid var(--ruby-line);
+  border-radius: var(--radius-sm);
+  background: var(--ruby-soft);
+  color: var(--ruby);
+  font-size: 12px;
+  box-shadow: var(--shadow-sm);
+  z-index: 5;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(26, 26, 28, .48);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.confirm-modal {
+  width: min(440px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+}
+.confirm-modal.agent-modal {
+  display: block;
+  width: min(680px, calc(100vw - 32px));
+  padding: 0;
+  overflow: hidden;
+}
+.agent-dialog {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+}
+.dialog-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+.dialog-head h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.25;
+}
+.dialog-head .sub {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.field {
+  display: grid;
+  gap: 7px;
+}
+.field > span,
+.checkline {
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+.field select,
+.field input,
+.field textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.field select {
+  height: 40px;
+  padding: 0 10px;
+}
+.field input {
+  min-height: 40px;
+  padding: 0 12px;
+}
+.field textarea {
+  resize: vertical;
+  min-height: 140px;
+  padding: 11px 12px;
+  line-height: 1.55;
+}
+.field select:focus,
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+.role-help {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.role-help strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+.role-help span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.template-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.template-chip {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+.template-chip:hover:not(:disabled) {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+.checkline {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.checkline input {
+  margin-top: 2px;
+}
+.dialog-reference {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.dialog-reference .hint {
+  color: var(--muted);
+  font-size: 12px;
+}
+.dialog-reference .reference-chip-list {
+  flex: 1 1 auto;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 2px;
+}
+.reference-dialog {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+}
+.reference-sources {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.reference-sources button {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+}
+.reference-sources button:hover,
+.reference-sources button.active {
+  border-color: var(--ink);
+  background: var(--ink-soft);
+}
+.reference-sources strong {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reference-sources span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.reference-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.reference-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.reference-search span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.reference-search input {
+  width: 100%;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+.reference-search input:focus {
+  outline: none;
+}
+.reference-path {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.reference-path span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reference-list {
+  min-height: 180px;
+  max-height: min(430px, 46vh);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.reference-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+}
+.reference-row:last-child {
+  border-bottom: 0;
+}
+.reference-row:hover,
+.reference-row.selected {
+  background: var(--surface-2);
+}
+.reference-row.selected {
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+.reference-row .info {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.reference-row .info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.reference-row .info small,
+.reference-row .action {
+  color: var(--muted);
+  font-size: 11px;
+}
+.reference-empty {
+  padding: 28px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+.reference-selected {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.reference-selected > strong {
+  color: var(--text-2);
+  font-size: 12px;
+}
+.reference-selected .hint {
+  color: var(--muted);
+  font-size: 12px;
+}
+.confirm-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--ruby-soft);
+  border: 1px solid var(--ruby-line);
+  color: var(--ruby);
+  font-weight: 800;
+  font-size: 18px;
+}
+.copy-modal .confirm-icon {
+  background: var(--blue-soft);
+  border-color: var(--blue-line);
+  color: var(--blue);
+}
+.confirm-copy {
+  min-width: 0;
+}
+.confirm-copy h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+.confirm-copy p {
+  margin: 8px 0 0;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.copy-target-field {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+}
+.copy-target-field span {
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 700;
+}
+.copy-target-field select {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.copy-target-field select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+.confirm-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 6px;
+}
+
+/* ============== CARD ============== */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.card-head h2 { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: 0; white-space: nowrap; }
+.card-head .meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.card-body { padding: 14px 18px; }
+.card-body.flush { padding: 0; }
+

@@ -1,0 +1,112 @@
+/* ============================================
+   Workroom Portal Portal — Redesigned
+   ============================================ */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  /* surface */
+  --bg: #f4f3ee;
+  --surface: #ffffff;
+  --surface-2: #faf9f4;
+  --surface-3: #efedE5;
+  --line: #e6e3d9;
+  --line-strong: #d3cfc1;
+
+  /* text */
+  --text: #1a1a1c;
+  --text-2: #3f3f44;
+  --muted: #82828a;
+  --muted-2: #b5b4b8;
+
+  /* accent (ink) */
+  --ink: #2a3a8e;
+  --ink-hover: #1f2a6f;
+  --ink-soft: #ecf0fb;
+  --ink-text: #1c266a;
+
+  /* agent */
+  --agent: #3b3f5a;
+  --agent-soft: #ececf3;
+  --agent-text: #2a2d44;
+
+  /* status */
+  --amber: #8a5408;
+  --amber-soft: #fcf2dc;
+  --amber-line: #ecd28e;
+  --ruby: #9c1f1f;
+  --ruby-soft: #faebeb;
+  --ruby-line: #ecbcbc;
+  --sage: #2a6437;
+  --sage-soft: #ebf2ec;
+  --sage-line: #b6d2bb;
+
+  /* layout */
+  --sidebar-w: 282px;
+  --sidebar-w-collapsed: 76px;
+  --topbar-h: 56px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --shadow-sm: 0 1px 2px rgba(20, 20, 20, 0.04);
+  --shadow: 0 4px 18px rgba(20, 20, 20, 0.06);
+  --shadow-lg: 0 16px 48px rgba(20, 20, 20, 0.12);
+}
+
+[data-density="compact"] {
+  --topbar-h: 48px;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  letter-spacing: 0;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, select, textarea, a { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: transparent; padding: 0; }
+a { color: var(--ink); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+em { font-style: normal; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #d8d5c9; border-radius: 999px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: #c2bfb1; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+.mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
+
+/* ============================================
+   APP SHELL
+   ============================================ */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+  transition: grid-template-columns .22s ease;
+}
+.app[data-sidebar="collapsed"] {
+  grid-template-columns: var(--sidebar-w-collapsed) 1fr;
+}
+

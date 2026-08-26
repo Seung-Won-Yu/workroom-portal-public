@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+dist/
+build/
+*.sqlite3
+*.db
+.env
+.env.*
+!.env.example
+portal_initial_passwords.txt
+playwright-report/
+test-results/
+.DS_Store
