@@ -65,11 +65,11 @@ test("React app restores a folder route and opens an output preview", async ({ p
     const firstEntry = page.locator(".entry").first();
     await expect(firstEntry).toBeVisible();
     await expect(page).toHaveURL(/root=all/);
-    await expect(page).toHaveURL(/path=team-alpha%2Fhcr%2Fdev/);
+    await expect(page).toHaveURL(/path=team-alpha%2Fuser1%2Fdev/);
 
     const firstEntryName = await firstEntry.locator(".name strong").innerText();
     await firstEntry.click();
-    await expect(page).toHaveURL(/file=team-alpha%2Fhcr%2Fdev%2F/);
+    await expect(page).toHaveURL(/file=team-alpha%2Fuser1%2Fdev%2F/);
     await expect(page.getByRole("heading", { name: firstEntryName })).toBeVisible();
     await expect(page.getByText("검토 후 처리")).toBeVisible();
     await expect(page.locator(".preview-pane")).toHaveCount(1);
