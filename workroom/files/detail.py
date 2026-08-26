@@ -5,7 +5,7 @@ from pathlib import Path
 import posixpath
 import urllib.parse
 
-from portal_core import (
+from workroom.core.scopes import (
     SORT_OPTIONS,
     TYPE_FILTERS,
     action_label,
@@ -22,7 +22,7 @@ from portal_core import (
     shared_move_plan,
     user_team_key,
 )
-from portal_preview import (
+from workroom.files.preview import (
     code_preview_html,
     convert_office_to_pdf,
     docx_text_preview,
@@ -35,13 +35,13 @@ from portal_preview import (
     xlsx_grid_preview,
     xlsx_preview_html,
 )
-from portal_settings import (
+from workroom.core.settings import (
     FILE_STATUS_LABELS,
     MAX_PREVIEW_BYTES,
     OFFICE_PREVIEW_EXTENSIONS,
     TEXT_EXTENSIONS,
 )
-from portal_urls import portal_url
+from workroom.core.urls import portal_url
 
 
 class FileDetailMixin:

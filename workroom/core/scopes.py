@@ -14,7 +14,7 @@ import shutil
 import time
 import unicodedata
 
-from portal_settings import (
+from workroom.core.settings import (
     AUDIT_ACTION_LABELS,
     AUDIT_LOG_PATH,
     AUDIT_ROTATE_BYTES,
@@ -35,7 +35,7 @@ from portal_settings import (
     TEXT_EXTENSIONS,
     WINDOWS_RESERVED_NAMES,
 )
-from portal_urls import portal_url
+from workroom.core.urls import portal_url
 
 
 def now_ts():

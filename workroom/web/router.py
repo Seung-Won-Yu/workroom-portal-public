@@ -2,9 +2,9 @@
 import secrets
 import urllib.parse
 
-from portal_core import now_ts, verify_password
-from portal_ui import html_page
-from portal_urls import portal_url
+from workroom.core.scopes import now_ts, verify_password
+from workroom.web.ui import html_page
+from workroom.core.urls import portal_url
 
 
 class PortalRouterMixin:

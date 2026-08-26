@@ -10,15 +10,15 @@ import urllib.parse
 import unicodedata
 import zipfile
 
-from portal_core import content_type_for, format_size, safe_name
-from portal_preview import convert_office_to_pdf, pptx_thumbnail, render_pdf_pages
-from portal_settings import (
+from workroom.core.scopes import content_type_for, format_size, safe_name
+from workroom.files.preview import convert_office_to_pdf, pptx_thumbnail, render_pdf_pages
+from workroom.core.settings import (
     ACTIVE_CONTENT_EXTENSIONS,
     MAX_ZIP_FILES,
     MAX_ZIP_SOURCE_BYTES,
     OFFICE_PREVIEW_EXTENSIONS,
 )
-from portal_ui import preview_page
+from workroom.web.ui import preview_page
 
 
 class FileStreamMixin:

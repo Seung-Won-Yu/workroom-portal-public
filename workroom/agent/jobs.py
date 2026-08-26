@@ -8,8 +8,8 @@ import uuid
 from contextlib import contextmanager
 from pathlib import Path
 
-from portal_core import normalized_rel_path, root_by_id, safe_name
-from portal_settings import (
+from workroom.core.scopes import normalized_rel_path, root_by_id, safe_name
+from workroom.core.settings import (
     AGENT_JOB_LOG_DIR,
     AGENT_JOB_MAX_PROMPT_CHARS,
     AGENT_JOBS_PATH,

@@ -7,7 +7,7 @@ import posixpath
 import time
 import urllib.parse
 
-from portal_core import (
+from workroom.core.scopes import (
     SORT_OPTIONS,
     TYPE_FILTERS,
     action_label,
@@ -36,7 +36,7 @@ from portal_core import (
     summary_last_activity,
     user_team_key,
 )
-from portal_settings import (
+from workroom.core.settings import (
     AUDIT_ACTION_LABELS,
     AUDIT_ROTATE_BYTES,
     CACHE_MAX_BYTES,
@@ -50,7 +50,7 @@ from portal_settings import (
     MAX_SCAN_FILES,
     STALE_FILE_DAYS,
 )
-from portal_urls import portal_url
+from workroom.core.urls import portal_url
 
 
 class AdminSearchMixin:

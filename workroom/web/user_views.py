@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import urllib.parse
 
-from portal_core import (
+from workroom.core.scopes import (
     file_status_key,
     file_type_info,
     format_size,
@@ -17,7 +17,7 @@ from portal_core import (
     summarize_workspace,
     summary_last_activity,
 )
-from portal_settings import (
+from workroom.core.settings import (
     FILE_STATUS_LABELS,
     HIDDEN_DIR_NAMES,
     MAX_RECENT_FILES,

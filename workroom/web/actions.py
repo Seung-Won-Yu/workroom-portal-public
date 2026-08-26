@@ -8,7 +8,7 @@ import posixpath
 import shutil
 import tempfile
 
-from portal_core import (
+from workroom.core.scopes import (
     archive_destination,
     archive_root_path,
     can_archive_personal_path,
@@ -24,8 +24,8 @@ from portal_core import (
     safe_upload_name,
     unique_peer_path,
 )
-from portal_settings import FILE_STATUS_LABELS, MAX_UPLOAD_BYTES, SHARED_MOVE_TARGETS
-from portal_urls import portal_url
+from workroom.core.settings import FILE_STATUS_LABELS, MAX_UPLOAD_BYTES, SHARED_MOVE_TARGETS
+from workroom.core.urls import portal_url
 
 
 class PortalActionsMixin:

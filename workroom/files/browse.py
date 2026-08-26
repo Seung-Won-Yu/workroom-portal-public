@@ -4,7 +4,7 @@ from pathlib import Path
 import posixpath
 import urllib.parse
 
-from portal_core import (
+from workroom.core.scopes import (
     SORT_OPTIONS,
     TYPE_FILTERS,
     breadcrumb_html,
@@ -27,7 +27,7 @@ from portal_core import (
     summarize_workspace,
     summary_last_activity,
 )
-from portal_settings import (
+from workroom.core.settings import (
     FILE_STATUS_LABELS,
     HIDDEN_DIR_NAMES,
     MAX_UPLOAD_BYTES,
@@ -35,7 +35,7 @@ from portal_settings import (
     PERSONAL_UPLOAD_HINTS,
     SHARED_MOVE_TARGETS,
 )
-from portal_urls import portal_url
+from workroom.core.urls import portal_url
 
 
 class FileBrowseMixin:

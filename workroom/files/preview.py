@@ -11,7 +11,7 @@ import urllib.parse
 import zipfile
 import xml.etree.ElementTree as ET
 
-from portal_settings import (
+from workroom.core.settings import (
     MAX_DOCX_CHARS,
     MAX_RENDERED_PAGES,
     MAX_XLSX_COLS,
@@ -20,7 +20,7 @@ from portal_settings import (
     PDF_RENDER_DPI,
     PREVIEW_CACHE_DIR,
 )
-from portal_urls import portal_url
+from workroom.core.urls import portal_url
 
 
 def xml_text(element: ET.Element) -> str:

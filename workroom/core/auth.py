@@ -3,7 +3,7 @@ import hmac
 import html
 import http.cookies
 
-from portal_core import is_private_client
+from workroom.core.scopes import is_private_client
 
 
 class PortalAuthMixin:

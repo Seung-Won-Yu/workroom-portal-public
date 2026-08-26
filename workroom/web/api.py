@@ -13,7 +13,7 @@ import time
 import urllib.parse
 from pathlib import Path
 
-from portal_core import (
+from workroom.core.scopes import (
     SORT_OPTIONS,
     TYPE_FILTERS,
     archive_destination,
@@ -52,8 +52,8 @@ from portal_core import (
     user_team_key,
     verify_password,
 )
-from portal_agent_jobs import cancel_job, create_job, hide_session, jobs_for_user, role_options
-from portal_settings import (
+from workroom.agent.jobs import cancel_job, create_job, hide_session, jobs_for_user, role_options
+from workroom.core.settings import (
     AUDIT_ACTION_LABELS,
     AUDIT_LOG_PATH,
     FILE_STATUS_LABELS,
@@ -64,7 +64,7 @@ from portal_settings import (
     PERSONAL_UPLOAD_DIRS,
     SHARED_MOVE_TARGETS,
 )
-from portal_urls import app_file_url, app_folder_url, portal_url
+from workroom.core.urls import app_file_url, app_folder_url, portal_url
 
 WORKFLOW_AUDIT_ACTIONS = {
     "archive",

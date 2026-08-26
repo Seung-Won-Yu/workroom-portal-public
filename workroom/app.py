@@ -3,15 +3,15 @@ import argparse
 from pathlib import Path
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from portal_actions import PortalActionsMixin
-from portal_admin_views import AdminViewsMixin
-from portal_api import PortalApiMixin
-from portal_auth import PortalAuthMixin
-from portal_file_views import FileViewsMixin
-from portal_http import PortalHttpMixin
-from portal_model import Portal
-from portal_router import PortalRouterMixin
-from portal_user_views import UserViewsMixin
+from workroom.web.actions import PortalActionsMixin
+from workroom.admin.views import AdminViewsMixin
+from workroom.web.api import PortalApiMixin
+from workroom.core.auth import PortalAuthMixin
+from workroom.files.views import FileViewsMixin
+from workroom.web.http import PortalHttpMixin
+from workroom.core.model import Portal
+from workroom.web.router import PortalRouterMixin
+from workroom.web.user_views import UserViewsMixin
 
 
 class Handler(

@@ -5,7 +5,7 @@ from pathlib import Path
 import secrets
 import tempfile
 
-from portal_core import hash_password
+from workroom.core.scopes import hash_password
 from setup_workroom_portal import CONFIG_PATH, PASSWORDS_PATH
 
 

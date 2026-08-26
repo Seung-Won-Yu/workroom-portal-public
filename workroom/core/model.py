@@ -9,7 +9,7 @@ import threading
 import time
 import unicodedata
 
-from portal_core import (
+from workroom.core.scopes import (
     b64,
     cleanup_cache_dir,
     event_matches_target,
@@ -19,7 +19,7 @@ from portal_core import (
     safe_name,
     unb64,
 )
-from portal_settings import (
+from workroom.core.settings import (
     AUDIT_LOG_PATH,
     CACHE_MAX_BYTES,
     CACHE_RETENTION_DAYS,

@@ -1,0 +1,14 @@
+[project]
+name = "workroom-portal"
+version = "1.0.0"
+description = "Team AI agent workroom — role-based agents, skill routing, and shared artifact governance"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+workroom-portal = "workroom.app:main"
+
+[tool.setuptools.packages.find]
+include = ["workroom*"]

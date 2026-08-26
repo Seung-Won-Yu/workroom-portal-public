@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import secrets
 
-from portal_core import hash_password
+from workroom.core.scopes import hash_password
 
 
 PORTAL_DIR = Path("/home/portal/workspaces/admin/portal")

@@ -52,26 +52,35 @@ AI에게 일을 시키는 건 개인이 하는데, 그 결과물은 팀이 씁�
 ## 구조
 
 ```text
-portal_agent_jobs.py  에이전트 역할·스킬 라우팅·비동기 작업 큐 (607줄)
-portal_core.py        작업공간 스코프 규칙 (개인/공유/관리자)
-portal_api.py         JSON API (1,860줄)
-portal_auth.py        세션·권한 판정
-portal_file_*.py      탐색 · 상세 · 스트리밍 (대용량 분할 전송)
-portal_preview.py     Markdown 렌더 · 코드 하이라이트 · 인라인 미리보기
-portal_admin_*.py     전체 검색 · 보관함 · 공통
-portal_selftest.py    자체 점검 스위트 (1,443줄)
-frontend/             React + TypeScript + Vite (Playwright 스모크 포함)
+workroom/
+  core/       설정 · URL · 작업공간 스코프 규칙 · 세션 · 모델
+  agent/      에이전트 역할 · 스킬 라우팅 · 비동기 작업 큐
+  files/      탐색 · 상세 · 스트리밍 · 미리보기
+  admin/      전체 검색 · 보관함 · 사용자별 점검
+  web/        HTTP · 라우터 · JSON API · 뷰 · UI 렌더
+  app.py      조립과 기동
+scripts/      작업공간 초기화 · 비밀번호 재설정 · 유지보수 · 자체 점검
+frontend/     React + TypeScript + Vite (Playwright 스모크)
 ```
+
+의존 방향은 한쪽입니다 — `core` 는 아무것도 모르고, 기능군(`agent`/`files`/
+`admin`)이 `core` 를 쓰고, `web` 이 그것들을 붙입니다. 권한 판정은
+`core/scopes.py` 한 곳에만 있습니다.
+
+주요 모듈 규모: `web/api.py` 1,860줄 · `scripts/selftest.py` 1,443줄 ·
+`core/scopes.py` 765줄 · `files/preview.py` 690줄 · `agent/jobs.py` 607줄.
+백엔드 전체 11,500여 줄.
 
 백엔드는 **외부 웹 프레임워크 없이** 파이썬 표준 라이브러리로 작성했습니다 —
 HTTP 처리, 라우팅, 세션, 템플릿을 직접 구현해 의존성과 배포 표면을 줄였습니다.
-전체 11,500여 줄.
 
 ## 실행
 
+파이썬 3.10 이상이 필요합니다 (`X | None` 타입 표기 사용).
+
 ```bash
-python3 setup_workroom_portal.py   # 작업공간·계정 초기화 (예시 구성)
-python3 portal_app.py              # 포털 기동 (기본 8787)
+python3 -m scripts.setup_workspaces   # 작업공간·계정 초기화 (예시 구성)
+python3 -m workroom                   # 포털 기동 (기본 8787)
 ```
 
 ```bash
@@ -81,7 +90,7 @@ cd frontend && npm install && npm run dev
 자체 점검:
 
 ```bash
-python3 portal_selftest.py
+python3 -m scripts.selftest
 ```
 
 ## 설계에서 신경 쓴 것

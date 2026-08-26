@@ -7,7 +7,7 @@ import posixpath
 import time
 import urllib.parse
 
-from portal_core import (
+from workroom.core.scopes import (
     SORT_OPTIONS,
     TYPE_FILTERS,
     action_label,
@@ -35,7 +35,7 @@ from portal_core import (
     summary_last_activity,
     user_team_key,
 )
-from portal_settings import (
+from workroom.core.settings import (
     ACTIVE_CONTENT_EXTENSIONS,
     AUDIT_ACTION_LABELS,
     AUDIT_ROTATE_BYTES,
@@ -51,9 +51,9 @@ from portal_settings import (
     OFFICE_PREVIEW_EXTENSIONS,
     STALE_FILE_DAYS,
 )
-from portal_preview import convert_office_to_pdf, pptx_thumbnail, render_pdf_pages
-from portal_ui import preview_page
-from portal_urls import portal_url
+from workroom.files.preview import convert_office_to_pdf, pptx_thumbnail, render_pdf_pages
+from workroom.web.ui import preview_page
+from workroom.core.urls import portal_url
 
 
 class AdminArchiveMixin:

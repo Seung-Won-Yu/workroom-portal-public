@@ -4,9 +4,9 @@ import html
 from pathlib import Path
 import urllib.parse
 
-from portal_core import normalized_rel_path, request_client_ip, root_by_id
-from portal_model import Portal
-from portal_ui import html_page, react_app_page, static_asset_response
+from workroom.core.scopes import normalized_rel_path, request_client_ip, root_by_id
+from workroom.core.model import Portal
+from workroom.web.ui import html_page, react_app_page, static_asset_response
 
 
 class PortalHttpMixin:
