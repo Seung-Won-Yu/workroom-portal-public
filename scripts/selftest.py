@@ -320,10 +320,10 @@ def main() -> None:
         and "team-alpha" in api_admin_summary["teams"]
         and "maintenance" in api_admin_summary,
     )
-    api_hcr = login("user1")
+    api_user1 = login("user1")
     api_upload_name = f"portal-api-upload-{int(time.time() * 1000)}.txt"
     api_upload = api_multipart_upload(
-        api_hcr,
+        api_user1,
         {"root": "personal", "path": "research"},
         api_upload_name,
         b"api upload selftest",
@@ -338,7 +338,7 @@ def main() -> None:
         and api_upload_target.exists(),
     )
     api_status = post_json(
-        api_hcr,
+        api_user1,
         "/api/actions/status",
         {"root": "personal", "path": api_upload_path, "file_status": "revision_needed"},
     )
@@ -353,7 +353,7 @@ def main() -> None:
         data=json.dumps({"root": "personal", "path": api_upload_path, "file_status": "review_needed"}).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "Cookie": cookie_header(api_hcr),
+            "Cookie": cookie_header(api_user1),
         },
         method="POST",
     )
@@ -362,7 +362,7 @@ def main() -> None:
     require("api-action-csrf-required", api_missing_csrf_status == 403 and api_missing_csrf.get("error") == "csrf_denied")
     api_renamed_name = f"portal-api-renamed-{int(time.time() * 1000)}.txt"
     api_rename = post_json(
-        api_hcr,
+        api_user1,
         "/api/actions/rename",
         {"root": "personal", "path": api_upload_path, "new_name": api_renamed_name},
     )
@@ -376,7 +376,7 @@ def main() -> None:
         and api_renamed_target.exists(),
     )
     api_share = post_json(
-        api_hcr,
+        api_user1,
         "/api/actions/share",
         {"root": "personal", "path": api_renamed_path, "shared_target": "research"},
     )
@@ -390,21 +390,21 @@ def main() -> None:
         and api_shared_target.exists(),
     )
     api_shared_file = json.loads(
-        api_hcr.open(f"{BASE}/api/file?root=team_shared&path={urllib.parse.quote(api_share['path'])}", timeout=10).read().decode("utf-8")
+        api_user1.open(f"{BASE}/api/file?root=team_shared&path={urllib.parse.quote(api_share['path'])}", timeout=10).read().decode("utf-8")
     )
     require("api-shared-owner-can-archive", api_shared_file["can_archive"] is True)
-    api_psj = login("user2")
+    api_user2 = login("user2")
     api_shared_peer_file = json.loads(
-        api_psj.open(f"{BASE}/api/file?root=team_shared&path={urllib.parse.quote(api_share['path'])}", timeout=10).read().decode("utf-8")
+        api_user2.open(f"{BASE}/api/file?root=team_shared&path={urllib.parse.quote(api_share['path'])}", timeout=10).read().decode("utf-8")
     )
     require("api-shared-peer-cannot-archive", api_shared_peer_file["can_archive"] is False)
     peer_archive_request = urllib.request.Request(
         f"{BASE}/api/actions/archive",
-        data=json.dumps({"root": "team_shared", "path": api_share["path"], "csrf_token": csrf_token(api_psj)}).encode("utf-8"),
+        data=json.dumps({"root": "team_shared", "path": api_share["path"], "csrf_token": csrf_token(api_user2)}).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "X-CSRF-Token": csrf_token(api_psj),
-            "Cookie": cookie_header(api_psj),
+            "X-CSRF-Token": csrf_token(api_user2),
+            "Cookie": cookie_header(api_user2),
         },
         method="POST",
     )
@@ -412,7 +412,7 @@ def main() -> None:
     peer_archive_payload = json.loads(peer_archive_response.read().decode("utf-8"))
     require("api-shared-peer-archive-blocked", peer_archive_status == 403 and peer_archive_payload.get("error") == "archive_delete")
     api_shared_archive = post_json(
-        api_hcr,
+        api_user1,
         "/api/actions/archive",
         {"root": "team_shared", "path": api_share["path"]},
     )
@@ -436,7 +436,7 @@ def main() -> None:
     api_archive_target = Path("/home/portal/workspaces/team-alpha/user1/research") / api_archive_name
     api_archive_target.write_text("api archive selftest", encoding="utf-8")
     api_archive = post_json(
-        api_hcr,
+        api_user1,
         "/api/actions/archive",
         {"root": "personal", "path": f"research/{api_archive_name}"},
     )
@@ -621,7 +621,7 @@ def main() -> None:
     )
     urllib.request.build_opener().open(forwarded_request, timeout=10).read()
 
-    hcr_opener = login("user1")
+    user1_opener = login("user1")
     delete_dir = Path("/home/portal/workspaces/team-alpha/user1/research")
     delete_dir.mkdir(parents=True, exist_ok=True)
     for stale_admin_search in delete_dir.glob("admin-search-check-*.md"):
@@ -629,17 +629,17 @@ def main() -> None:
     admin_search_name = f"admin-search-check-{int(time.time() * 1000)}.md"
     admin_search_target = delete_dir / admin_search_name
     admin_search_target.write_text("# admin search check\n\nThis file verifies admin-wide file search.\n", encoding="utf-8")
-    post_form(hcr_opener, "/set_file_status", {"root": "personal", "path": f"research/{admin_search_name}", "file_status": "review_needed"})
+    post_form(user1_opener, "/set_file_status", {"root": "personal", "path": f"research/{admin_search_name}", "file_status": "review_needed"})
     delete_target = delete_dir / f"portal-delete-test-{int(time.time())}.txt"
     delete_target.write_text("portal archive delete selftest\n", encoding="utf-8")
-    personal_response = hcr_opener.open(
+    personal_response = user1_opener.open(
         f"{BASE}/browse?root=personal&path=research",
         timeout=30,
     )
     personal_body = read_text_response(personal_response)
     if is_react_shell(personal_body):
         require_react_shell("personal-list", personal_response, personal_body, root="personal", path="research")
-        api_personal_folder = json.loads(hcr_opener.open(f"{BASE}/api/folder?root=personal&path=research", timeout=10).read().decode("utf-8"))
+        api_personal_folder = json.loads(user1_opener.open(f"{BASE}/api/folder?root=personal&path=research", timeout=10).read().decode("utf-8"))
         require("personal-list-hides-archive-action", all("archive_delete" not in json.dumps(entry, ensure_ascii=False) for entry in api_personal_folder["entries"]))
         require("personal-upload-api-path", api_personal_folder["root"]["id"] == "personal" and api_personal_folder["path"] == "research")
     else:
@@ -648,21 +648,21 @@ def main() -> None:
         require("personal-upload-form-visible", "/upload_file" in personal_rendered and "조사 자료에 업로드" in personal_rendered and "저장 위치: 개인 작업공간 / 조사 자료" in personal_rendered and "실행 파일과 설치 파일" in personal_rendered)
         require("personal-forms-have-csrf", 'name="csrf_token"' in personal_rendered)
         require("global-nav-personal-active", 'class="nav-link active" href="/browse?root=personal" aria-current="page">내 산출물' in personal_rendered)
-    delete_detail_body = hcr_opener.open(
+    delete_detail_body = user1_opener.open(
         f"{BASE}/view?root=personal&path={urllib.parse.quote('research/' + delete_target.name)}",
         timeout=30,
     ).read().decode("utf-8", "replace")
     delete_detail_rendered = delete_detail_body.split("</style>", 1)[-1]
     require("personal-archive-delete-action-visible", "/archive_delete" in delete_detail_rendered and "보관함으로 이동" in delete_detail_rendered and "삭제(보관)" not in delete_detail_rendered)
 
-    personal_root_response = hcr_opener.open(
+    personal_root_response = user1_opener.open(
         f"{BASE}/browse?root=personal",
         timeout=30,
     )
     personal_root_body = read_text_response(personal_root_response)
     if is_react_shell(personal_root_body):
         require_react_shell("personal-root", personal_root_response, personal_root_body, root="personal")
-        api_personal_root = json.loads(hcr_opener.open(f"{BASE}/api/folder?root=personal", timeout=10).read().decode("utf-8"))
+        api_personal_root = json.loads(user1_opener.open(f"{BASE}/api/folder?root=personal", timeout=10).read().decode("utf-8"))
         require("personal-root-upload-form-hidden", api_personal_root["path"] == "")
         require("personal-root-upload-targets", all(any(entry["name"] == folder and entry["is_dir"] for entry in api_personal_root["entries"]) for folder in ("dev", "research", "summary")))
     else:
@@ -672,12 +672,12 @@ def main() -> None:
 
     archive_data = urllib.parse.urlencode({"root": "personal", "path": f"research/{delete_target.name}"}).encode()
     try:
-        hcr_opener.open(f"{BASE}/archive_delete", data=archive_data, timeout=30)
+        user1_opener.open(f"{BASE}/archive_delete", data=archive_data, timeout=30)
         csrf_status = "allowed"
     except urllib.error.HTTPError as exc:
         csrf_status = str(exc.code)
     require("csrf-missing-archive-blocked", csrf_status == "403")
-    archive_response = post_form(hcr_opener, "/archive_delete", {"root": "personal", "path": f"research/{delete_target.name}"})
+    archive_response = post_form(user1_opener, "/archive_delete", {"root": "personal", "path": f"research/{delete_target.name}"})
     archive_body = archive_response.read().decode("utf-8", "replace")
     require("personal-archive-delete-redirect", "msg=archived" in archive_response.geturl() or "보관함으로 이동" in archive_body)
     if is_react_shell(archive_body):
@@ -716,7 +716,7 @@ def main() -> None:
     upload_stamp = int(time.time() * 1000)
     upload_name = f"portal-upload-test-{upload_stamp}.txt"
     upload_response = multipart_upload(
-        hcr_opener,
+        user1_opener,
         {"root": "personal", "path": "research"},
         upload_name,
         b"portal upload selftest\n",
@@ -732,7 +732,7 @@ def main() -> None:
         headers={"Content-Type": "text/plain"},
     )
     try:
-        hcr_opener.open(bad_content_request, timeout=10)
+        user1_opener.open(bad_content_request, timeout=10)
         bad_content_status = "allowed"
         bad_content_body = ""
     except urllib.error.HTTPError as exc:
@@ -740,12 +740,12 @@ def main() -> None:
         bad_content_body = exc.read().decode("utf-8", "replace")
     require("upload-bad-content-type-guidance", bad_content_status == "400" and "업로드 화면에서 다시 시도" in bad_content_body and "브라우저 화면을 사용하세요" in bad_content_body)
 
-    oversize_status, oversize_body = oversized_upload_response(hcr_opener)
+    oversize_status, oversize_body = oversized_upload_response(user1_opener)
     require("upload-oversize-guidance", oversize_status == 413 and "파일이 너무 큽니다" in oversize_body and "최대 용량" in oversize_body and "나눠서 다시 업로드" in oversize_body)
 
-    status_response = post_form(hcr_opener, "/set_file_status", {"root": "personal", "path": f"research/{upload_name}", "file_status": "review_needed"})
+    status_response = post_form(user1_opener, "/set_file_status", {"root": "personal", "path": f"research/{upload_name}", "file_status": "review_needed"})
     status_body = status_response.read().decode("utf-8", "replace")
-    status_view = hcr_opener.open(
+    status_view = user1_opener.open(
         f"{BASE}/view?root=personal&path={urllib.parse.quote('research/' + upload_name)}",
         timeout=30,
     ).read().decode("utf-8", "replace")
@@ -755,7 +755,7 @@ def main() -> None:
     require("personal-status-does-not-fake-shared", "팀 공유됨" not in status_rendered)
 
     duplicate_response = multipart_upload(
-        hcr_opener,
+        user1_opener,
         {"root": "personal", "path": "research"},
         upload_name,
         b"portal upload duplicate selftest\n",
@@ -767,7 +767,7 @@ def main() -> None:
     blocked_root_name = f"portal-root-upload-blocked-{upload_stamp}.txt"
     blocked_root_target = Path("/home/portal/workspaces/team-alpha/user1") / blocked_root_name
     try:
-        multipart_upload(hcr_opener, {"root": "personal", "path": ""}, blocked_root_name, b"blocked root\n")
+        multipart_upload(user1_opener, {"root": "personal", "path": ""}, blocked_root_name, b"blocked root\n")
         root_upload_blocked = False
         root_upload_body = ""
     except urllib.error.HTTPError as exc:
@@ -778,7 +778,7 @@ def main() -> None:
     blocked_shared_name = f"portal-shared-upload-blocked-{upload_stamp}.txt"
     blocked_shared_target = Path("/home/portal/workspaces/team-alpha/user1/shared") / blocked_shared_name
     try:
-        multipart_upload(hcr_opener, {"root": "personal", "path": "shared"}, blocked_shared_name, b"blocked shared\n")
+        multipart_upload(user1_opener, {"root": "personal", "path": "shared"}, blocked_shared_name, b"blocked shared\n")
         personal_shared_upload_blocked = False
         personal_shared_upload_body = ""
     except urllib.error.HTTPError as exc:
@@ -787,14 +787,14 @@ def main() -> None:
     require("personal-shared-upload-blocked", personal_shared_upload_blocked and "팀 공유공간에는 직접 업로드하지 않습니다" in personal_shared_upload_body and not blocked_shared_target.exists())
 
     try:
-        post_form(hcr_opener, "/archive_delete", {"root": "personal", "path": f"shared/{blocked_shared_name}"})
+        post_form(user1_opener, "/archive_delete", {"root": "personal", "path": f"shared/{blocked_shared_name}"})
         personal_shared_archive_blocked = False
     except urllib.error.HTTPError as exc:
         personal_shared_archive_blocked = exc.code == 403
     require("personal-shared-subtree-archive-blocked", personal_shared_archive_blocked and not blocked_shared_target.parent.exists())
 
     try:
-        multipart_upload(hcr_opener, {"root": "team_shared", "path": "research"}, f"blocked-upload-{upload_stamp}.txt", b"blocked\n")
+        multipart_upload(user1_opener, {"root": "team_shared", "path": "research"}, f"blocked-upload-{upload_stamp}.txt", b"blocked\n")
         shared_upload_status = "allowed"
         shared_upload_body = ""
     except urllib.error.HTTPError as exc:
@@ -802,14 +802,14 @@ def main() -> None:
         shared_upload_body = exc.read().decode("utf-8", "replace")
     require("shared-upload-blocked", shared_upload_status == "403" and "팀 공유공간에는 직접 업로드하지 않습니다" in shared_upload_body)
 
-    shared_browse_response = hcr_opener.open(
+    shared_browse_response = user1_opener.open(
         f"{BASE}/browse?root=team_shared&path=research",
         timeout=30,
     )
     shared_browse = read_text_response(shared_browse_response)
     if is_react_shell(shared_browse):
         require_react_shell("shared-folder", shared_browse_response, shared_browse, root="team_shared", path="research")
-        api_shared_folder = json.loads(hcr_opener.open(f"{BASE}/api/folder?root=team_shared&path=research", timeout=10).read().decode("utf-8"))
+        api_shared_folder = json.loads(user1_opener.open(f"{BASE}/api/folder?root=team_shared&path=research", timeout=10).read().decode("utf-8"))
         require("shared-upload-form-hidden", api_shared_folder["root"]["id"] == "team_shared")
         require("shared-folder-context", api_shared_folder["path"] == "research" and "team_shared" in api_shared_folder["root"]["id"])
     else:
@@ -817,14 +817,14 @@ def main() -> None:
         require("shared-upload-form-hidden", "/upload_file" not in shared_browse_rendered)
         require("shared-folder-context", "shared-workspace-panel" in shared_browse_rendered and "리서치 공유" in shared_browse_rendered and "팀원이 함께 보는 공유 폴더" in shared_browse_rendered and "팀 공유 전체" in shared_browse_rendered)
 
-    shared_root_response = hcr_opener.open(
+    shared_root_response = user1_opener.open(
         f"{BASE}/browse?root=team_shared",
         timeout=30,
     )
     shared_root_body = read_text_response(shared_root_response)
     if is_react_shell(shared_root_body):
         require_react_shell("shared-root", shared_root_response, shared_root_body, root="team_shared")
-        api_shared_root = json.loads(hcr_opener.open(f"{BASE}/api/folder?root=team_shared", timeout=10).read().decode("utf-8"))
+        api_shared_root = json.loads(user1_opener.open(f"{BASE}/api/folder?root=team_shared", timeout=10).read().decode("utf-8"))
         require("shared-root-context", all(any(entry["name"] == folder and entry["is_dir"] for entry in api_shared_root["entries"]) for folder in ("dev", "research", "summary")))
     else:
         shared_root_rendered = shared_root_body.split("</style>", 1)[-1]
@@ -835,7 +835,7 @@ def main() -> None:
     unsafe_all_blocked = True
     for unsafe_name in unsafe_upload_cases:
         try:
-            multipart_upload(hcr_opener, {"root": "personal", "path": "research"}, unsafe_name, b"secret\n")
+            multipart_upload(user1_opener, {"root": "personal", "path": "research"}, unsafe_name, b"secret\n")
             unsafe_all_blocked = False
         except urllib.error.HTTPError as exc:
             body = exc.read().decode("utf-8", "replace")
@@ -853,7 +853,7 @@ def main() -> None:
     try:
         symlink_target.unlink(missing_ok=True)
         symlink_target.symlink_to("/etc/hostname")
-        zip_response = hcr_opener.open(f"{BASE}/download?root=personal&path=research", timeout=30)
+        zip_response = user1_opener.open(f"{BASE}/download?root=personal&path=research", timeout=30)
         zip_bytes = zip_response.read()
         with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zf:
             zip_names = set(zf.namelist())
@@ -865,7 +865,7 @@ def main() -> None:
     try:
         non_ascii_download.write_text("non ascii download selftest\n", encoding="utf-8")
         non_ascii_path = f"research/{non_ascii_download.name}"
-        personal_download = hcr_opener.open(f"{BASE}/download?root=personal&path={urllib.parse.quote(non_ascii_path)}", timeout=30)
+        personal_download = user1_opener.open(f"{BASE}/download?root=personal&path={urllib.parse.quote(non_ascii_path)}", timeout=30)
         personal_disposition = personal_download.headers.get("Content-Disposition", "")
         require(
             "non-ascii-personal-download",
@@ -896,7 +896,7 @@ def main() -> None:
     manage_target = delete_dir / f"portal-manage-test-{manage_stamp}.md"
     renamed_name = f"portal-manage-renamed-{manage_stamp}.md"
     manage_target.write_text("# manage selftest\n\nrename and share move\n", encoding="utf-8")
-    manage_view = hcr_opener.open(
+    manage_view = user1_opener.open(
         f"{BASE}/view?root=personal&path={urllib.parse.quote('research/' + manage_target.name)}",
         timeout=30,
     ).read().decode("utf-8", "replace")
@@ -908,14 +908,14 @@ def main() -> None:
     require("personal-share-callout-visible", "팀과 공유할 준비" in manage_rendered and "검토가 끝난 파일만" in manage_rendered and "추천 위치: 팀 리서치 공유" in manage_rendered and "이동 후 위치: 팀 공유공간 / research /" in manage_rendered)
     require("personal-share-default-target", '<option value="research" selected>' in manage_rendered and "이동 후 위치: 팀 공유공간 / research /" in manage_rendered)
 
-    rename_response = post_form(hcr_opener, "/rename_item", {"root": "personal", "path": f"research/{manage_target.name}", "new_name": renamed_name})
+    rename_response = post_form(user1_opener, "/rename_item", {"root": "personal", "path": f"research/{manage_target.name}", "new_name": renamed_name})
     rename_body = rename_response.read().decode("utf-8", "replace")
     renamed_target = delete_dir / renamed_name
     require("personal-rename-redirects-to-view", "msg=renamed" in rename_response.geturl() or "이름을 변경했습니다." in rename_body)
     require("personal-rename-source-gone", not manage_target.exists())
     require("personal-rename-destination-exists", renamed_target.exists())
 
-    share_response = post_form(hcr_opener, "/move_to_shared", {"root": "personal", "path": f"research/{renamed_name}", "shared_target": "research"})
+    share_response = post_form(user1_opener, "/move_to_shared", {"root": "personal", "path": f"research/{renamed_name}", "shared_target": "research"})
     share_body = share_response.read().decode("utf-8", "replace")
     share_rendered = share_body.split("</style>", 1)[-1]
     shared_target = Path("/home/portal/workspaces/team-alpha/shared/research") / renamed_name
@@ -926,12 +926,12 @@ def main() -> None:
     require("personal-share-move-destination-exists", shared_target.exists())
 
     shared_status_response = post_form(
-        hcr_opener,
+        user1_opener,
         "/set_file_status",
         {"root": "team_shared", "path": f"research/{renamed_name}", "file_status": "revision_needed"},
     )
     shared_status_body = shared_status_response.read().decode("utf-8", "replace")
-    shared_status_view = hcr_opener.open(
+    shared_status_view = user1_opener.open(
         f"{BASE}/view?root=team_shared&path={urllib.parse.quote('research/' + renamed_name)}",
         timeout=30,
     ).read().decode("utf-8", "replace")
@@ -1056,14 +1056,14 @@ def main() -> None:
         )
 
     try:
-        post_form(hcr_opener, "/rename_item", {"root": "team_shared", "path": f"research/{renamed_name}", "new_name": f"blocked-{renamed_name}"})
+        post_form(user1_opener, "/rename_item", {"root": "team_shared", "path": f"research/{renamed_name}", "new_name": f"blocked-{renamed_name}"})
         shared_rename_status = "allowed"
     except urllib.error.HTTPError as exc:
         shared_rename_status = str(exc.code)
     require("shared-rename-blocked", shared_rename_status == "403")
 
     try:
-        post_form(hcr_opener, "/archive_delete", {"root": "team_shared", "path": "research"})
+        post_form(user1_opener, "/archive_delete", {"root": "team_shared", "path": "research"})
         shared_archive_status = "allowed"
     except urllib.error.HTTPError as exc:
         shared_archive_status = str(exc.code)
@@ -1183,13 +1183,13 @@ def main() -> None:
 
     personal_empty_dir = Path("/home/portal/workspaces/team-alpha/user1/research/portal-empty-selftest")
     personal_empty_dir.mkdir(parents=True, exist_ok=True)
-    personal_empty_response = hcr_opener.open(
+    personal_empty_response = user1_opener.open(
         f"{BASE}/browse?root=personal&path=research/portal-empty-selftest",
         timeout=30,
     )
     personal_empty_body = read_text_response(personal_empty_response)
     if is_react_shell(personal_empty_body):
-        api_personal_empty = json.loads(hcr_opener.open(f"{BASE}/api/folder?root=personal&path=research/portal-empty-selftest", timeout=10).read().decode("utf-8"))
+        api_personal_empty = json.loads(user1_opener.open(f"{BASE}/api/folder?root=personal&path=research/portal-empty-selftest", timeout=10).read().decode("utf-8"))
         require("personal-empty-upload-copy", api_personal_empty["entry_count"] == 0)
     else:
         personal_empty_rendered = personal_empty_body.split("</style>", 1)[-1]
@@ -1222,13 +1222,13 @@ def main() -> None:
         require("browse-combined-filter-pdf", "sample-pdf.pdf" in combo_filter_rendered and "sample-code.py" not in combo_filter_rendered)
         require("browse-filter-preserves-sort-in-chips", "sort=modified" in combo_filter_rendered)
 
-    status_filter_response = hcr_opener.open(
+    status_filter_response = user1_opener.open(
         f"{BASE}/browse?root=personal&path=research&status=review_needed",
         timeout=30,
     )
     status_filter_body = read_text_response(status_filter_response)
     if is_react_shell(status_filter_body):
-        api_status_filter = json.loads(hcr_opener.open(f"{BASE}/api/folder?root=personal&path=research&status=review_needed", timeout=10).read().decode("utf-8"))
+        api_status_filter = json.loads(user1_opener.open(f"{BASE}/api/folder?root=personal&path=research&status=review_needed", timeout=10).read().decode("utf-8"))
         require(
             "browse-status-filter-review-needed",
             api_status_filter["filters"]["status"] == "review_needed"
@@ -1267,7 +1267,7 @@ def main() -> None:
     require("view-does-not-render-folder-file-list", "viewer-file-nav" not in stateful_view_rendered and "sample-style.css" not in stateful_view_rendered and "sample-docx.docx" not in stateful_view_rendered)
     require("view-folder-link-keeps-state", "q=sample" in stateful_view_rendered and "type=code" in stateful_view_rendered and "sort=modified" in stateful_view_rendered)
 
-    advanced_state_view = hcr_opener.open(
+    advanced_state_view = user1_opener.open(
         f"{BASE}/view?root=personal&path={urllib.parse.quote('research/' + upload_name)}&status=review_needed&date_from={today}&sort=modified",
         timeout=30,
     ).read().decode("utf-8", "replace")
