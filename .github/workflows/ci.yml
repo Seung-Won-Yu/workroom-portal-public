@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    name: Python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile all modules
+        run: python -m compileall -q workroom scripts
+      - name: Import every module
+        # 의존이 한 방향인지, 순환이 없는지를 임포트로 확인한다.
+        run: |
+          python - <<'PY'
+          import importlib, pkgutil, sys
+          failed = []
+          for pkg in ("workroom", "scripts"):
+              for mod in pkgutil.walk_packages([pkg], prefix=f"{pkg}."):
+                  try:
+                      importlib.import_module(mod.name)
+                  except Exception as error:
+                      failed.append((mod.name, f"{type(error).__name__}: {error}"))
+          for name, err in failed:
+              print(f"FAIL {name}: {err}", file=sys.stderr)
+          sys.exit(1 if failed else 0)
+          PY
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Build
+        run: npm run build

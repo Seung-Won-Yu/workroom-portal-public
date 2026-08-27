@@ -6,7 +6,7 @@ import secrets
 import tempfile
 
 from workroom.core.scopes import hash_password
-from setup_workroom_portal import CONFIG_PATH, PASSWORDS_PATH
+from scripts.setup_workspaces import CONFIG_PATH, PASSWORDS_PATH
 
 
 def atomic_write_text(path: Path, text: str, mode: int = 0o600) -> None:

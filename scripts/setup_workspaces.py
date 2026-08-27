@@ -6,65 +6,67 @@ import secrets
 from workroom.core.scopes import hash_password
 
 
-PORTAL_DIR = Path("/home/portal/workspaces/admin/portal")
+from workroom.core.settings import PORTAL_HOME, WORKROOM_HOME
+
+PORTAL_DIR = PORTAL_HOME
 CONFIG_PATH = PORTAL_DIR / "portal_config.json"
-PASSWORDS_PATH = Path("/home/portal/workspaces/admin/portal_initial_passwords.txt")
+PASSWORDS_PATH = WORKROOM_HOME / "admin" / "portal_initial_passwords.txt"
 
 USERS = {
     "admin": {
         "name": "관리자",
         "roots": [
-            {"id": "personal", "label": "관리자 작업공간", "path": "/home/portal/workspaces/admin/workroom"},
-            {"id": "all", "label": "전체 작업공간", "path": "/home/portal/workspaces"},
+            {"id": "personal", "label": "관리자 작업공간", "path": str(WORKROOM_HOME / 'admin' / 'workroom')},
+            {"id": "all", "label": "전체 작업공간", "path": str(WORKROOM_HOME)},
         ],
     },
     "user1": {
         "name": "사용자1",
         "roots": [
-            {"id": "personal", "label": "사용자1 개인 작업공간", "path": "/home/portal/workspaces/team-alpha/user1"},
-            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": "/home/portal/workspaces/team-alpha/shared"},
+            {"id": "personal", "label": "사용자1 개인 작업공간", "path": str(WORKROOM_HOME / 'team-alpha' / 'user1')},
+            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": str(WORKROOM_HOME / 'team-alpha' / 'shared')},
         ],
     },
     "user2": {
         "name": "사용자2",
         "roots": [
-            {"id": "personal", "label": "사용자2 개인 작업공간", "path": "/home/portal/workspaces/team-alpha/user2"},
-            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": "/home/portal/workspaces/team-alpha/shared"},
+            {"id": "personal", "label": "사용자2 개인 작업공간", "path": str(WORKROOM_HOME / 'team-alpha' / 'user2')},
+            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": str(WORKROOM_HOME / 'team-alpha' / 'shared')},
         ],
     },
     "user3": {
         "name": "사용자3",
         "roots": [
-            {"id": "personal", "label": "사용자3 개인 작업공간", "path": "/home/portal/workspaces/team-alpha/user3"},
-            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": "/home/portal/workspaces/team-alpha/shared"},
+            {"id": "personal", "label": "사용자3 개인 작업공간", "path": str(WORKROOM_HOME / 'team-alpha' / 'user3')},
+            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": str(WORKROOM_HOME / 'team-alpha' / 'shared')},
         ],
     },
     "user4": {
         "name": "사용자4",
         "roots": [
-            {"id": "personal", "label": "사용자4 개인 작업공간", "path": "/home/portal/workspaces/team-alpha/user4"},
-            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": "/home/portal/workspaces/team-alpha/shared"},
+            {"id": "personal", "label": "사용자4 개인 작업공간", "path": str(WORKROOM_HOME / 'team-alpha' / 'user4')},
+            {"id": "team_shared", "label": "team-alpha 팀 공유", "path": str(WORKROOM_HOME / 'team-alpha' / 'shared')},
         ],
     },
     "user5": {
         "name": "사용자5",
         "roots": [
-            {"id": "personal", "label": "사용자5 개인 작업공간", "path": "/home/portal/workspaces/team-beta/user5"},
-            {"id": "team_shared", "label": "team-beta 팀 공유", "path": "/home/portal/workspaces/team-beta/shared"},
+            {"id": "personal", "label": "사용자5 개인 작업공간", "path": str(WORKROOM_HOME / 'team-beta' / 'user5')},
+            {"id": "team_shared", "label": "team-beta 팀 공유", "path": str(WORKROOM_HOME / 'team-beta' / 'shared')},
         ],
     },
     "user6": {
         "name": "사용자6",
         "roots": [
-            {"id": "personal", "label": "사용자6 개인 작업공간", "path": "/home/portal/workspaces/team-beta/user6"},
-            {"id": "team_shared", "label": "team-beta 팀 공유", "path": "/home/portal/workspaces/team-beta/shared"},
+            {"id": "personal", "label": "사용자6 개인 작업공간", "path": str(WORKROOM_HOME / 'team-beta' / 'user6')},
+            {"id": "team_shared", "label": "team-beta 팀 공유", "path": str(WORKROOM_HOME / 'team-beta' / 'shared')},
         ],
     },
     "user7": {
         "name": "사용자7",
         "roots": [
-            {"id": "personal", "label": "사용자7 개인 작업공간", "path": "/home/portal/workspaces/team-beta/user7"},
-            {"id": "team_shared", "label": "team-beta 팀 공유", "path": "/home/portal/workspaces/team-beta/shared"},
+            {"id": "personal", "label": "사용자7 개인 작업공간", "path": str(WORKROOM_HOME / 'team-beta' / 'user7')},
+            {"id": "team_shared", "label": "team-beta 팀 공유", "path": str(WORKROOM_HOME / 'team-beta' / 'shared')},
         ],
     },
 }

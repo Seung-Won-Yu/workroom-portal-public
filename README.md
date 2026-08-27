@@ -93,6 +93,17 @@ cd frontend && npm install && npm run dev
 python3 -m scripts.selftest
 ```
 
+### 설정
+
+경로는 전부 환경변수로 바꿀 수 있습니다. `.env.example` 참고:
+
+| 변수 | 뜻 | 기본값 |
+|---|---|---|
+| `WORKROOM_HOME` | 작업공간 루트 | `/home/portal/workspaces` |
+| `WORKROOM_PORTAL_HOME` | 포털 내부 파일(설정·감사로그·캐시) | `$WORKROOM_HOME/admin/portal` |
+| `HERMES_BIN` | 에이전트 실행 바이너리 | `hermes` |
+
+
 ## 설계에서 신경 쓴 것
 
 - **사용자는 스킬을 몰라도 된다** — 요청 문구에서 필요한 도구를 시스템이 고릅니다

@@ -2,6 +2,10 @@
 import os
 from pathlib import Path
 
+# 배포 루트 — 환경변수로 바꿀 수 있다 (기본은 리눅스 서비스 계정 경로).
+WORKROOM_HOME = Path(os.environ.get("WORKROOM_HOME", "/home/portal/workspaces"))
+PORTAL_HOME = Path(os.environ.get("WORKROOM_PORTAL_HOME", str(WORKROOM_HOME / "admin" / "portal")))
+
 
 TEXT_EXTENSIONS = {
     ".txt",
@@ -111,9 +115,9 @@ MAX_DOCX_CHARS = 40_000
 MAX_XLSX_ROWS = 80
 MAX_XLSX_COLS = 24
 OFFICE_PREVIEW_EXTENSIONS = {".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".odt", ".odp", ".ods"}
-PREVIEW_CACHE_DIR = Path("/home/portal/workspaces/admin/portal/preview_cache")
-PAGE_CACHE_DIR = Path("/home/portal/workspaces/admin/portal/page_cache")
-AUDIT_LOG_PATH = Path("/home/portal/workspaces/admin/portal/audit_events.jsonl")
+PREVIEW_CACHE_DIR = PORTAL_HOME / "preview_cache"
+PAGE_CACHE_DIR = PORTAL_HOME / "page_cache"
+AUDIT_LOG_PATH = PORTAL_HOME / "audit_events.jsonl"
 PDF_RENDER_DPI = 130
 MAX_RENDERED_PAGES = 12
 MAX_AUDIT_DISPLAY = 12
@@ -125,9 +129,14 @@ CACHE_MAX_BYTES = 500 * 1024 * 1024
 AUDIT_ROTATE_BYTES = 20 * 1024 * 1024
 AUDIT_ROTATION_KEEP = 5
 
-AGENT_JOBS_PATH = Path(os.environ.get("WORKROOM_AGENT_JOBS_PATH", "/home/portal/workspaces/admin/portal/agent_jobs.jsonl"))
-AGENT_JOB_LOG_DIR = Path(os.environ.get("WORKROOM_AGENT_JOB_LOG_DIR", "/home/portal/workspaces/admin/portal/agent_job_logs"))
-HERMES_BIN = os.environ.get("HERMES_BIN", "/home/portal/.hermes/hermes-agent/venv/bin/hermes")
+AGENT_JOBS_PATH = Path(os.environ.get(
+    "WORKROOM_AGENT_JOBS_PATH", str(PORTAL_HOME / "agent_jobs.jsonl")
+))
+AGENT_JOB_LOG_DIR = Path(os.environ.get(
+    "WORKROOM_AGENT_JOB_LOG_DIR", str(PORTAL_HOME / "agent_job_logs")
+))
+# 에이전트 실행 바이너리 — 환경에 맞게 지정한다.
+HERMES_BIN = os.environ.get("HERMES_BIN", "hermes")
 HERMES_JOB_TIMEOUT_SECONDS = int(os.environ.get("HERMES_JOB_TIMEOUT_SECONDS", "900"))
 HERMES_JOB_POLL_SECONDS = float(os.environ.get("HERMES_JOB_POLL_SECONDS", "2"))
 AGENT_JOB_MAX_PROMPT_CHARS = 8000
